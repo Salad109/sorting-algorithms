@@ -3,8 +3,10 @@ package utils
 import (
 	"errors"
 	"fmt"
+	"time"
 )
 
+// PrintArray prints the elements of the array. If the array is empty, it prints a message indicating that.
 func PrintArray(arr []int) {
 	if len(arr) == 0 {
 		fmt.Println("Array is empty.")
@@ -27,6 +29,7 @@ func PrintArray(arr []int) {
 	return
 }
 
+// ValidateSort checks if the array is sorted in ascending order.
 func ValidateSort(arr []int) bool {
 	if len(arr) <= 1 {
 		return false
@@ -39,11 +42,41 @@ func ValidateSort(arr []int) bool {
 	return true
 }
 
-func SortArray(arr []int, sortingAlgorithm func([]int)) error {
+// SortArray sorts the given array using the provided sorting algorithm and returns the time taken to sort.
+func SortArray(arr []int, sortingAlgorithm func([]int)) (time.Duration, error) {
 	if len(arr) <= 1 {
-		return errors.New("array too small to sort")
+		return 0, errors.New("array too small to sort")
 	}
-	// todo implement benchmarking
+
+	// Measure execution time
+	start := time.Now()
 	sortingAlgorithm(arr)
-	return nil
+	elapsed := time.Since(start)
+
+	return elapsed, nil
+}
+
+// SortArrayIterate sorts the given array using the provided sorting algorithm multiple times and returns the average time taken to sort.
+func SortArrayIterate(arr []int, sortingAlgorithm func([]int), iterations int) (time.Duration, error) {
+	var totalTime time.Duration
+
+	// Discard first run (warmup)
+	tempArr := make([]int, len(arr))
+	copy(tempArr, arr)
+	_, err := SortArray(tempArr, sortingAlgorithm)
+	if err != nil {
+		return 0, err
+	}
+
+	// Measure average time over multiple runs
+	for i := 0; i < iterations; i++ {
+		tempArr := make([]int, len(arr))
+		copy(tempArr, arr)
+
+		start := time.Now()
+		sortingAlgorithm(tempArr)
+		totalTime += time.Since(start)
+	}
+
+	return totalTime / time.Duration(iterations), nil
 }

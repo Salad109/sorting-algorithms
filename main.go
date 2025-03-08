@@ -16,6 +16,7 @@ func main() {
 		fmt.Println("\t1. Generate Array")
 		fmt.Println("\t2. Print Array")
 		fmt.Println("\t3. Sort Array using Bubble Sort")
+		fmt.Println("\t4. Sort Array using Bubble Sort multiple times")
 
 		_, inputError := fmt.Scanln(&action)
 		if inputError != nil {
@@ -36,12 +37,20 @@ func main() {
 			utils.PrintArray(arr)
 		case "3":
 			fmt.Println("Sorting array using Bubble Sort...")
-			sortingError := utils.SortArray(arr, algorithms.BubbleSort)
+			duration, sortingError := utils.SortArray(arr, algorithms.BubbleSort)
 			if sortingError != nil {
 				fmt.Println("Error sorting array:", sortingError)
 				continue
 			}
-			fmt.Println("Array sorted successfully.")
+			fmt.Println("Array sorted successfully. Time taken:", duration)
+		case "4":
+			fmt.Println("Sorting array using Bubble Sort multiple times...")
+			duration, sortingError := utils.SortArrayIterate(arr, algorithms.BubbleSort, 10)
+			if sortingError != nil {
+				fmt.Println("Error sorting array:", sortingError)
+				continue
+			}
+			fmt.Println("Array sorted successfully. Average time taken:", duration)
 		default:
 			fmt.Println("Invalid action. Please try again.")
 		}

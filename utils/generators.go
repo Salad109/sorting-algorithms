@@ -6,6 +6,7 @@ import (
 	"strconv"
 )
 
+// GenerateFullyRandomArray generates a fully random array of integers.
 func GenerateFullyRandomArray(arr []int) ([]int, error) {
 	fmt.Println("Enter the size of the array:")
 	var inputSize string
