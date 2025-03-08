@@ -14,10 +14,10 @@ func main() {
 	for action != "0" {
 		fmt.Println("Choose an action:")
 		fmt.Println("\t0. Exit")
-		fmt.Println("\t1. Generate Array")
-		fmt.Println("\t2. Print Array")
-		fmt.Println("\t3. Sort Array using Bubble Sort")
-		fmt.Println("\t4. Sort Array using Bubble Sort multiple times")
+		fmt.Println("\t1. Generate a fully random array")
+		fmt.Println("\t2. Print array")
+		fmt.Println("\t3. Sort array using bubble sort")
+		fmt.Println("\t4. Sort array using bubble sort multiple times")
 
 		_, inputError := fmt.Scanln(&action)
 		if inputError != nil {

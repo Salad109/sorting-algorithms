@@ -53,6 +53,10 @@ func SortArray(arr []int, sortingAlgorithm func([]int)) (time.Duration, error) {
 	sortingAlgorithm(arr)
 	elapsed := time.Since(start)
 
+	if !ValidateSort(arr) {
+		return elapsed, errors.New("sort unsuccessful")
+	}
+
 	return elapsed, nil
 }
 
