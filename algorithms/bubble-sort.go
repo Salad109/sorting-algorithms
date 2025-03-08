@@ -1,7 +1,7 @@
 package algorithms
 
 // BubbleSort sorts a slice of integers using the bubble sort algorithm.
-func BubbleSort(arr []int) {
+func BubbleSort(arr []int32) {
 	n := len(arr)
 
 	for {

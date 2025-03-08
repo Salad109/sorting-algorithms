@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	var arr []int
+	var arr []int32
 	fmt.Println("Sorting algorithms benchmark program")
 	action := ""
 	for action != "0" {
@@ -37,7 +37,7 @@ func main() {
 				return
 			}
 
-			size, parseError := strconv.ParseInt(inputSize, 10, 64)
+			size, parseError := strconv.ParseInt(inputSize, 10, 32)
 			if parseError != nil {
 				fmt.Println("Error parsing size:", parseError)
 				return
@@ -48,7 +48,7 @@ func main() {
 				continue
 			}
 
-			arr = tools.GenerateFullyRandomArray(size)
+			arr = tools.GenerateFullyRandomArray(int(size))
 			fmt.Println("Array generated successfully.")
 		case "2":
 			tools.PrintArray(arr)

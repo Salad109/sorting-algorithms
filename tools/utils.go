@@ -7,7 +7,7 @@ import (
 )
 
 // PrintArray prints the elements of the array. If the array is empty, it prints a message indicating that.
-func PrintArray(arr []int) {
+func PrintArray(arr []int32) {
 	if len(arr) == 0 {
 		fmt.Println("Array is empty.")
 		return
@@ -30,7 +30,7 @@ func PrintArray(arr []int) {
 }
 
 // ValidateSort checks if the array is sorted in ascending order.
-func ValidateSort(arr []int) bool {
+func ValidateSort(arr []int32) bool {
 	if len(arr) <= 1 {
 		return false
 	}
@@ -43,7 +43,7 @@ func ValidateSort(arr []int) bool {
 }
 
 // SortArray sorts the given array using the provided sorting algorithm and returns the time taken to sort.
-func SortArray(arr []int, sortingAlgorithm func([]int)) (time.Duration, error) {
+func SortArray(arr []int32, sortingAlgorithm func([]int32)) (time.Duration, error) {
 	if len(arr) <= 1 {
 		return 0, errors.New("array too small to sort")
 	}
@@ -61,11 +61,11 @@ func SortArray(arr []int, sortingAlgorithm func([]int)) (time.Duration, error) {
 }
 
 // SortArrayIterate sorts the given array using the provided sorting algorithm multiple times and returns the average time taken to sort.
-func SortArrayIterate(arr []int, sortingAlgorithm func([]int), iterations int) (time.Duration, error) {
+func SortArrayIterate(arr []int32, sortingAlgorithm func([]int32), iterations int) (time.Duration, error) {
 	var totalTime time.Duration
 
 	// Discard first run (warmup)
-	tempArr := make([]int, len(arr))
+	tempArr := make([]int32, len(arr))
 	copy(tempArr, arr)
 	_, err := SortArray(tempArr, sortingAlgorithm)
 	if err != nil {
@@ -74,7 +74,7 @@ func SortArrayIterate(arr []int, sortingAlgorithm func([]int), iterations int) (
 
 	// Measure average time over multiple runs
 	for i := 0; i < iterations; i++ {
-		tempArr := make([]int, len(arr))
+		tempArr := make([]int32, len(arr))
 		copy(tempArr, arr)
 
 		start := time.Now()
