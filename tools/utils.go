@@ -42,12 +42,8 @@ func ValidateSort(arr []int32) bool {
 	return true
 }
 
-// SortArray sorts the given array using the provided sorting algorithm and returns the time taken to sort.
-func SortArray(arr []int32, sortingAlgorithm func([]int32)) (time.Duration, error) {
-	if len(arr) <= 1 {
-		return 0, errors.New("array too small to sort")
-	}
-
+func SortArray(size int, sortingAlgorithm func([]int32)) (time.Duration, error) {
+	arr := GenerateFullyRandomArray(size)
 	// Measure execution time
 	start := time.Now()
 	sortingAlgorithm(arr)
@@ -60,26 +56,17 @@ func SortArray(arr []int32, sortingAlgorithm func([]int32)) (time.Duration, erro
 	return elapsed, nil
 }
 
-// SortArrayIterate sorts the given array using the provided sorting algorithm multiple times and returns the average time taken to sort.
-func SortArrayIterate(arr []int32, sortingAlgorithm func([]int32), iterations int) (time.Duration, error) {
+func SortArrayIterate(size int, sortingAlgorithm func([]int32), iterations int) (time.Duration, error) {
 	var totalTime time.Duration
-
-	// Discard first run (warmup)
-	tempArr := make([]int32, len(arr))
-	copy(tempArr, arr)
-	_, err := SortArray(tempArr, sortingAlgorithm)
-	if err != nil {
-		return 0, err
-	}
 
 	// Measure average time over multiple runs
 	for i := 0; i < iterations; i++ {
-		tempArr := make([]int32, len(arr))
-		copy(tempArr, arr)
+		sortingTime, sortingError := SortArray(size, sortingAlgorithm)
+		if sortingError != nil {
+			return 0, sortingError
+		}
 
-		start := time.Now()
-		sortingAlgorithm(tempArr)
-		totalTime += time.Since(start)
+		totalTime += sortingTime
 	}
 
 	return totalTime / time.Duration(iterations), nil
