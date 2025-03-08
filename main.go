@@ -26,69 +26,33 @@ func main() {
 		case "0":
 			return
 		case "1":
-			fmt.Println("Enter the size of the array:")
-			var inputSize string
-			_, inputError := fmt.Scanln(&inputSize)
-			if inputError != nil {
-				fmt.Println("Error reading size input:", inputError)
+			size, err := readInt("Enter the size of the array: ", 1)
+			if err != nil {
+				fmt.Println("Error reading input:", err)
 				return
-			}
-
-			size, parseError := strconv.ParseInt(inputSize, 10, 32)
-			if parseError != nil {
-				fmt.Println("Error parsing size:", parseError)
-				return
-			}
-
-			if size <= 0 {
-				fmt.Println("Size must be greater than 0.")
-				continue
 			}
 
 			fmt.Println("Sorting array using Bubble Sort...")
-			duration, sortingError := tools.SortArray(int(size), algorithms.BubbleSort)
+			duration, sortingError := tools.SortArray(size, algorithms.BubbleSort)
 			if sortingError != nil {
 				fmt.Println("Error sorting array:", sortingError)
 				continue
 			}
 			fmt.Println("Array sorted successfully. Time taken:", duration)
 		case "2":
-			fmt.Println("Enter the size of the array:")
-			var inputSize string
-			_, inputSizeError := fmt.Scanln(&inputSize)
-			if inputSizeError != nil {
-				fmt.Println("Error reading size input:", inputSizeError)
+			size, err := readInt("Enter the size of the array: ", 1)
+			if err != nil {
+				fmt.Println("Error reading input:", err)
 				return
 			}
 
-			size, parseError := strconv.ParseInt(inputSize, 10, 32)
-			if parseError != nil {
-				fmt.Println("Error parsing size:", parseError)
+			iterations, err2 := readInt("Enter the number of iterations: ", 1)
+			if err2 != nil {
+				fmt.Println("Error reading input:", err2)
 				return
 			}
 
-			if size <= 0 {
-				fmt.Println("Size must be greater than 0.")
-				continue
-			}
-
-			fmt.Println("Enter the iteration count:")
-			var inputIterations string
-			_, inputIterationError := fmt.Scanln(&inputIterations)
-			if inputIterationError != nil {
-				fmt.Println("Error reading iteration count input:", inputIterationError)
-				return
-			}
-			iterations, parseError := strconv.ParseInt(inputIterations, 10, 64)
-			if parseError != nil {
-				fmt.Println("Error parsing iteration count:", parseError)
-				continue
-			}
-			if iterations <= 0 {
-				fmt.Println("Iteration count must be greater than 0.")
-				continue
-			}
-			averageDuration, sortingError := tools.SortArrayIterate(int(size), algorithms.BubbleSort, int(iterations))
+			averageDuration, sortingError := tools.SortArrayIterate(size, algorithms.BubbleSort, iterations)
 			if sortingError != nil {
 				fmt.Println("Error sorting array:", sortingError)
 				continue
@@ -97,5 +61,29 @@ func main() {
 		default:
 			fmt.Println("Invalid action. Please try again.")
 		}
+	}
+}
+
+func readInt(prompt string, min int) (int, error) {
+	for {
+		fmt.Print(prompt)
+		var input string
+		_, err := fmt.Scanln(&input)
+		if err != nil {
+			return 0, err
+		}
+
+		val, err := strconv.Atoi(input)
+		if err != nil {
+			fmt.Println("Invalid number, please try again.")
+			continue
+		}
+
+		if val < min {
+			fmt.Printf("Value must be at least %d, please try again.\n", min)
+			continue
+		}
+
+		return val, nil
 	}
 }

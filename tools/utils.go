@@ -26,13 +26,12 @@ func PrintArray(arr []int32) {
 	fmt.Println("Is sorted:", ValidateSort(arr))
 
 	fmt.Println()
-	return
 }
 
 // ValidateSort checks if the array is sorted in ascending order.
 func ValidateSort(arr []int32) bool {
 	if len(arr) <= 1 {
-		return false
+		return true
 	}
 	for i := 0; i < len(arr)-1; i++ {
 		if arr[i] > arr[i+1] {
@@ -50,7 +49,7 @@ func SortArray(size int, sortingAlgorithm func([]int32)) (time.Duration, error) 
 	elapsed := time.Since(start)
 
 	if !ValidateSort(arr) {
-		return elapsed, errors.New("sort unsuccessful")
+		return elapsed, errors.New("sort failed validation")
 	}
 
 	return elapsed, nil
