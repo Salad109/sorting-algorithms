@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"sorting-algorithms/algorithms"
-	"sorting-algorithms/utils"
+	"sorting-algorithms/tools"
+	"strconv"
 )
 
 func main() {
@@ -24,20 +25,36 @@ func main() {
 			return
 		}
 
-		var err error
 		switch action {
 		case "0":
 			return
 		case "1":
-			arr, err = utils.GenerateFullyRandomArray(arr)
-			if err != nil {
-				fmt.Println("Error generating array:", err)
+			fmt.Println("Enter the size of the array:")
+			var inputSize string
+			_, inputError := fmt.Scanln(&inputSize)
+			if inputError != nil {
+				fmt.Println("Error reading size input:", inputError)
+				return
 			}
+
+			size, parseError := strconv.ParseInt(inputSize, 10, 64)
+			if parseError != nil {
+				fmt.Println("Error parsing size:", parseError)
+				return
+			}
+
+			if size <= 0 {
+				fmt.Println("Size must be greater than 0.")
+				continue
+			}
+
+			arr = tools.GenerateFullyRandomArray(size)
+			fmt.Println("Array generated successfully.")
 		case "2":
-			utils.PrintArray(arr)
+			tools.PrintArray(arr)
 		case "3":
 			fmt.Println("Sorting array using Bubble Sort...")
-			duration, sortingError := utils.SortArray(arr, algorithms.BubbleSort)
+			duration, sortingError := tools.SortArray(arr, algorithms.BubbleSort)
 			if sortingError != nil {
 				fmt.Println("Error sorting array:", sortingError)
 				continue
@@ -45,7 +62,7 @@ func main() {
 			fmt.Println("Array sorted successfully. Time taken:", duration)
 		case "4":
 			fmt.Println("Sorting array using Bubble Sort multiple times...")
-			duration, sortingError := utils.SortArrayIterate(arr, algorithms.BubbleSort, 10)
+			duration, sortingError := tools.SortArrayIterate(arr, algorithms.BubbleSort, 10)
 			if sortingError != nil {
 				fmt.Println("Error sorting array:", sortingError)
 				continue
