@@ -31,18 +31,19 @@ func main() {
 			arr, err = utils.GenerateFullyRandomArray(arr)
 			if err != nil {
 				fmt.Println("Error generating array:", err)
-				continue
 			}
 		case "2":
 			utils.PrintArray(arr)
 		case "3":
 			fmt.Println("Sorting array using Bubble Sort...")
-			sortingError := algorithms.BubbleSort(arr)
+			sortingError := utils.SortArray(arr, algorithms.BubbleSort)
 			if sortingError != nil {
 				fmt.Println("Error sorting array:", sortingError)
 				continue
 			}
 			fmt.Println("Array sorted successfully.")
+		default:
+			fmt.Println("Invalid action. Please try again.")
 		}
 	}
 }

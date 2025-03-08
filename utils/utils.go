@@ -1,6 +1,9 @@
 package utils
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 func PrintArray(arr []int) {
 	if len(arr) == 0 {
@@ -34,4 +37,13 @@ func ValidateSort(arr []int) bool {
 		}
 	}
 	return true
+}
+
+func SortArray(arr []int, sortingAlgorithm func([]int)) error {
+	if len(arr) <= 1 {
+		return errors.New("array too small to sort")
+	}
+	// todo implement benchmarking
+	sortingAlgorithm(arr)
+	return nil
 }

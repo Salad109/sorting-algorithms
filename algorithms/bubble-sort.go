@@ -1,13 +1,8 @@
 package algorithms
 
-import "errors"
-
 // BubbleSort sorts a slice of integers using the bubble sort algorithm.
-func BubbleSort(arr []int) error {
+func BubbleSort(arr []int) {
 	n := len(arr)
-	if n <= 1 {
-		return errors.New("array too small to sort")
-	}
 
 	for {
 		swapped := false
@@ -22,5 +17,4 @@ func BubbleSort(arr []int) error {
 		}
 		n-- // Reduce the range of the next pass
 	}
-	return nil
 }

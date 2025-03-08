@@ -18,6 +18,9 @@ func GenerateFullyRandomArray(arr []int) ([]int, error) {
 	if parseError != nil {
 		return nil, parseError
 	}
+	if size <= 0 {
+		return nil, fmt.Errorf("invalid size: %d", size)
+	}
 	arr = make([]int, size)
 	for i := 0; i < int(size); i++ {
 		arr[i] = rand.Intn(10000) // Random number between 0 and 99
