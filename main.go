@@ -87,3 +87,5 @@ func readInt(prompt string, min int) (int, error) {
 		return val, nil
 	}
 }
+
+// todo choose generation method

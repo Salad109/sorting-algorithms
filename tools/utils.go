@@ -23,7 +23,7 @@ func PrintArray(arr []int32) {
 	for i := 0; i < len(arr); i++ {
 		fmt.Print(arr[i], " ")
 	}
-	fmt.Println("Is sorted:", ValidateSort(arr))
+	fmt.Println("\nIs sorted:", ValidateSort(arr))
 
 	fmt.Println()
 }
@@ -43,10 +43,13 @@ func ValidateSort(arr []int32) bool {
 
 func SortArray(size int, sortingAlgorithm func([]int32)) (time.Duration, error) {
 	arr := GenerateFullyRandomArray(size)
+	PrintArray(arr)
 	// Measure execution time
 	start := time.Now()
 	sortingAlgorithm(arr)
 	elapsed := time.Since(start)
+
+	PrintArray(arr)
 
 	if !ValidateSort(arr) {
 		return elapsed, errors.New("sort failed validation")
@@ -60,6 +63,7 @@ func SortArrayIterate(size int, sortingAlgorithm func([]int32), iterations int) 
 
 	// Measure average time over multiple runs
 	for i := 0; i < iterations; i++ {
+		fmt.Println("Iteration:", i)
 		sortingTime, sortingError := SortArray(size, sortingAlgorithm)
 		if sortingError != nil {
 			return 0, sortingError
