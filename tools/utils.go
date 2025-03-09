@@ -41,8 +41,9 @@ func ValidateSort(arr []int32) bool {
 	return true
 }
 
-func SortArray(size int, sortingAlgorithm func([]int32)) (time.Duration, error) {
-	arr := GenerateFullyRandomArray(size)
+// SortArray sorts an array using the provided sorting algorithm and measures the time taken.
+func SortArray(size int, sortingAlgorithm func([]int32), generationMethod func(int) []int32) (time.Duration, error) {
+	arr := generationMethod(size)
 	PrintArray(arr)
 	// Measure execution time
 	start := time.Now()
@@ -58,13 +59,14 @@ func SortArray(size int, sortingAlgorithm func([]int32)) (time.Duration, error) 
 	return elapsed, nil
 }
 
-func SortArrayIterate(size int, sortingAlgorithm func([]int32), iterations int) (time.Duration, error) {
+// SortArrayIterate sorts an array multiple times using the provided sorting algorithm and measures the average time taken.
+func SortArrayIterate(size int, sortingAlgorithm func([]int32), generationMethod func(int) []int32, iterations int) (time.Duration, error) {
 	var totalTime time.Duration
 
 	// Measure average time over multiple runs
 	for i := 0; i < iterations; i++ {
 		fmt.Println("Iteration:", i)
-		sortingTime, sortingError := SortArray(size, sortingAlgorithm)
+		sortingTime, sortingError := SortArray(size, sortingAlgorithm, generationMethod)
 		if sortingError != nil {
 			return 0, sortingError
 		}
