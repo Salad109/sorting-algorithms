@@ -21,34 +21,44 @@ func main() {
 		case 0:
 			return
 		case 1:
-			algorithm, name := chooseSortingAlgorithm()
-			size := readInt("Enter the size of the array: ", 0, tools.MaxInt)
-			generator := readGenerationMethod()
-
-			fmt.Println("Sorting array using", name)
-			duration, sortingError := tools.SortArray(size, algorithm, generator)
-			if sortingError != nil {
-				fmt.Println("Error sorting array:", sortingError)
-				continue
-			}
-			fmt.Println("Array sorted successfully. Time taken:", duration)
+			sortArrayOnce()
 		case 2:
-			algorithm, name := chooseSortingAlgorithm()
-			size := readInt("Enter the size of the array: ", 0, tools.MaxInt)
-			generator := readGenerationMethod()
-			iterations := readInt("Enter the number of iterations: ", 1, tools.MaxInt)
-
-			fmt.Println("Sorting array using", name)
-			averageDuration, sortingError := tools.SortArrayIterate(size, algorithm, generator, iterations)
-			if sortingError != nil {
-				fmt.Println("Error sorting array:", sortingError)
-				continue
-			}
-			fmt.Println("Array sorted successfully. Average time taken:", averageDuration)
+			sortArrayMultipleTimes()
 		default:
 			fmt.Println("Invalid action. Please try again.")
 		}
 	}
+}
+
+// sortArrayOnce handles the logic for sorting an array once
+func sortArrayOnce() {
+	algorithm, name := chooseSortingAlgorithm()
+	size := readInt("Enter the size of the array: ", 0, tools.MaxInt)
+	generator := readGenerationMethod()
+
+	fmt.Println("Sorting array using", name)
+	duration, sortingError := tools.SortArray(size, algorithm, generator)
+	if sortingError != nil {
+		fmt.Println("Error sorting array:", sortingError)
+		return
+	}
+	fmt.Println("Array sorted successfully. Time taken:", duration)
+}
+
+// sortArrayMultipleTimes handles the logic for sorting an array multiple times
+func sortArrayMultipleTimes() {
+	algorithm, name := chooseSortingAlgorithm()
+	size := readInt("Enter the size of the array: ", 0, tools.MaxInt)
+	generator := readGenerationMethod()
+	iterations := readInt("Enter the number of iterations: ", 1, tools.MaxInt)
+
+	fmt.Println("Sorting array using", name)
+	averageDuration, sortingError := tools.SortArrayIterate(size, algorithm, generator, iterations)
+	if sortingError != nil {
+		fmt.Println("Error sorting array:", sortingError)
+		return
+	}
+	fmt.Println("Array sorted successfully. Average time taken:", averageDuration)
 }
 
 // readInt reads an integer from the user with a prompt and validates it against min and max values.
