@@ -14,8 +14,9 @@ func main() {
 		fmt.Println("\t0. Exit")
 		fmt.Println("\t1. Sort array once")
 		fmt.Println("\t2. Sort array multiple times")
+		fmt.Println("\t3. Benchmark bubble sort")
 
-		action := readInt("", 0, 2)
+		action := readInt("", 0, 3)
 
 		switch action {
 		case 0:
@@ -24,6 +25,8 @@ func main() {
 			sortArrayOnce()
 		case 2:
 			sortArrayMultipleTimes()
+		case 3:
+			benchmarkBubbleSort()
 		default:
 			fmt.Println("Invalid action. Please try again.")
 		}
@@ -37,7 +40,7 @@ func sortArrayOnce() {
 	generator := readGenerationMethod()
 
 	fmt.Println("Sorting array using", name)
-	duration, sortingError := tools.SortArray(size, algorithm, generator)
+	duration, sortingError := tools.SortArray(size, algorithm, generator, false)
 	if sortingError != nil {
 		fmt.Println("Error sorting array:", sortingError)
 		return
@@ -53,12 +56,56 @@ func sortArrayMultipleTimes() {
 	iterations := readInt("Enter the number of iterations: ", 1, tools.MaxInt)
 
 	fmt.Println("Sorting array using", name)
-	averageDuration, sortingError := tools.SortArrayIterate(size, algorithm, generator, iterations)
+	averageDuration, sortingError := tools.SortArrayIterate(size, algorithm, generator, iterations, false)
 	if sortingError != nil {
 		fmt.Println("Error sorting array:", sortingError)
 		return
 	}
 	fmt.Println("Array sorted successfully. Average time taken:", averageDuration)
+}
+
+// benchmarkBubbleSort runs a benchmark for bubble sort.
+func benchmarkBubbleSort() {
+	generationMethodList := []struct {
+		generator func(int) []int32
+		name      string
+	}{
+		{tools.GenerateFullyRandomArray, "Fully random"},
+		{tools.GenerateSortedArray, "Sorted"},
+		{tools.GenerateReverseSortedArray, "Reverse sorted"},
+		{tools.GenerateOneThirdSortedArray, "33% sorted"},
+		{tools.GenerateTwoThirdsSortedArray, "66% sorted"},
+	}
+	sizes := []int{1000, 5000, 10000}
+	results := make([][]int64, len(generationMethodList))
+	iterations := 10
+	for generatorIndex, generator := range generationMethodList {
+		for _, size := range sizes {
+			fmt.Print("Benchmarking size: ", size, "Generation method: ", generator.name, "... ")
+			algorithm := algorithms.BubbleSort
+			averageDuration, sortingError := tools.SortArrayIterate(size, algorithm, generator.generator, iterations, true)
+			if sortingError != nil {
+				fmt.Println("Error sorting array:", sortingError)
+				return
+			}
+			results[generatorIndex] = append(results[generatorIndex], averageDuration.Microseconds())
+			fmt.Println("Time taken:", averageDuration)
+		}
+	}
+	fmt.Println("Benchmark results:")
+	fmt.Println("Size\tFully Random\tSorted\tReverse Sorted\t33% Sorted\t66% Sorted")
+	for i, size := range sizes {
+		fmt.Printf("%d\t", size)
+		for j := 0; j < len(generationMethodList); j++ {
+			if len(results[j]) > i {
+				fmt.Printf("%v\t", results[j][i])
+			} else {
+				fmt.Print("N/A\t")
+			}
+		}
+		fmt.Println()
+	}
+	return
 }
 
 // readInt reads an integer from the user with a prompt and validates it against min and max values.

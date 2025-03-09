@@ -9,6 +9,11 @@ import (
 
 const MaxInt = math.MaxInt32 - 1
 
+// SortingResults holds the name of the sorting algorithm and the results for various initial conditions.
+type SortingResults struct {
+	TimeResults []time.Duration
+}
+
 // PrintArray prints the elements of the array. If the array is empty, it prints a message indicating that.
 func PrintArray(arr []int32) {
 	if len(arr) == 0 {
@@ -43,15 +48,19 @@ func ValidateSort(arr []int32) bool {
 }
 
 // SortArray sorts an array using the provided sorting algorithm and measures the time taken.
-func SortArray(size int, sortingAlgorithm func([]int32), generationMethod func(int) []int32) (time.Duration, error) {
+func SortArray(size int, sortingAlgorithm func([]int32), generationMethod func(int) []int32, beQuiet bool) (time.Duration, error) {
 	arr := generationMethod(size)
-	PrintArray(arr)
+	if !beQuiet {
+		PrintArray(arr)
+	}
 	// Measure execution time
 	start := time.Now()
 	sortingAlgorithm(arr)
 	elapsed := time.Since(start)
 
-	PrintArray(arr)
+	if !beQuiet {
+		PrintArray(arr)
+	}
 
 	if !ValidateSort(arr) {
 		return elapsed, errors.New("sort failed validation")
@@ -61,17 +70,21 @@ func SortArray(size int, sortingAlgorithm func([]int32), generationMethod func(i
 }
 
 // SortArrayIterate sorts an array multiple times using the provided sorting algorithm and measures the average time taken.
-func SortArrayIterate(size int, sortingAlgorithm func([]int32), generationMethod func(int) []int32, iterations int) (time.Duration, error) {
+func SortArrayIterate(size int, sortingAlgorithm func([]int32), generationMethod func(int) []int32, iterations int, beQuiet bool) (time.Duration, error) {
 	var totalTime time.Duration
 
 	// Measure average time over multiple runs
 	for i := 0; i < iterations; i++ {
-		fmt.Println("====== Iteration:", i, "======")
-		sortingTime, sortingError := SortArray(size, sortingAlgorithm, generationMethod)
+		if !beQuiet {
+			fmt.Println("====== Iteration:", i, "======")
+		}
+		sortingTime, sortingError := SortArray(size, sortingAlgorithm, generationMethod, beQuiet)
 		if sortingError != nil {
 			return 0, sortingError
 		}
-		fmt.Println("==========================")
+		if !beQuiet {
+			fmt.Println("==========================")
+		}
 
 		totalTime += sortingTime
 	}
