@@ -3,8 +3,11 @@ package tools
 import (
 	"errors"
 	"fmt"
+	"math"
 	"time"
 )
+
+const MaxInt = math.MaxInt32 - 1
 
 // PrintArray prints the elements of the array. If the array is empty, it prints a message indicating that.
 func PrintArray(arr []int32) {

@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"sorting-algorithms/algorithms"
 	"sorting-algorithms/tools"
 	"strconv"
@@ -22,7 +21,7 @@ func main() {
 		case 0:
 			return
 		case 1:
-			size := readInt("Enter the size of the array: ", 0, math.MaxInt32)
+			size := readInt("Enter the size of the array: ", 0, tools.MaxInt)
 			generator := readGenerationMethod()
 
 			fmt.Println("Sorting array using Bubble Sort...")
@@ -33,9 +32,9 @@ func main() {
 			}
 			fmt.Println("Array sorted successfully. Time taken:", duration)
 		case 2:
-			size := readInt("Enter the size of the array: ", 0, math.MaxInt32)
+			size := readInt("Enter the size of the array: ", 0, tools.MaxInt)
 			generator := readGenerationMethod()
-			iterations := readInt("Enter the number of iterations: ", 1, math.MaxInt32)
+			iterations := readInt("Enter the number of iterations: ", 1, tools.MaxInt)
 
 			averageDuration, sortingError := tools.SortArrayIterate(size, algorithms.BubbleSort, generator, iterations)
 			if sortingError != nil {
