@@ -27,8 +27,6 @@ func PrintArray(arr []int32) {
 		fmt.Print(arr[i], " ")
 	}
 	fmt.Println("\nIs sorted:", ValidateSort(arr))
-
-	fmt.Println()
 }
 
 // ValidateSort checks if the array is sorted in ascending order.
@@ -68,11 +66,12 @@ func SortArrayIterate(size int, sortingAlgorithm func([]int32), generationMethod
 
 	// Measure average time over multiple runs
 	for i := 0; i < iterations; i++ {
-		fmt.Println("Iteration:", i)
+		fmt.Println("====== Iteration:", i, "======")
 		sortingTime, sortingError := SortArray(size, sortingAlgorithm, generationMethod)
 		if sortingError != nil {
 			return 0, sortingError
 		}
+		fmt.Println("==========================")
 
 		totalTime += sortingTime
 	}

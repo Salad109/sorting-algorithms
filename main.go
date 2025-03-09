@@ -122,7 +122,9 @@ func chooseSortingAlgorithm() (func([]int32), string) {
 		fmt.Println("\t1. Bubble Sort")
 		fmt.Println("\t2. Insertion Sort")
 		fmt.Println("\t3. Binary Insertion Sort")
-		choice := readInt("", 1, 3)
+		fmt.Println("\t4. Heap Sort")
+		fmt.Println("\t5. Quick Sort")
+		choice := readInt("", 1, 5)
 		switch choice {
 		case 1:
 			return algorithms.BubbleSort, "Bubble Sort"
@@ -130,6 +132,10 @@ func chooseSortingAlgorithm() (func([]int32), string) {
 			return algorithms.InsertionSort, "Insertion Sort"
 		case 3:
 			return algorithms.BinaryInsertionSort, "Binary Insertion Sort"
+		case 4:
+			return algorithms.HeapSort, "Heap Sort"
+		case 5:
+			return algorithms.QuickSort, "Quick Sort"
 		default:
 			fmt.Println("Invalid choice.")
 			continue
