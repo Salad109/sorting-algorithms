@@ -2,19 +2,20 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"sorting-algorithms/algorithms"
 	"sorting-algorithms/tools"
 	"strconv"
 )
 
 func main() {
-	fmt.Println("Sorting algorithms benchmark program")
+	fmt.Println("Sorting algorithms runBenchmark program")
 	for {
 		fmt.Println("Choose an action:")
 		fmt.Println("\t0. Exit")
 		fmt.Println("\t1. Sort array once")
 		fmt.Println("\t2. Sort array multiple times")
-		fmt.Println("\t3. Benchmark bubble sort")
+		fmt.Println("\t3. Benchmark algorithm")
 
 		action := readInt("", 0, 3)
 
@@ -26,7 +27,7 @@ func main() {
 		case 2:
 			sortArrayMultipleTimes()
 		case 3:
-			benchmarkBubbleSort()
+			handleBenchmark()
 		default:
 			fmt.Println("Invalid action. Please try again.")
 		}
@@ -64,8 +65,8 @@ func sortArrayMultipleTimes() {
 	fmt.Println("Array sorted successfully. Average time taken:", averageDuration)
 }
 
-// benchmarkBubbleSort runs a benchmark for bubble sort.
-func benchmarkBubbleSort() {
+// runBenchmark runs a runBenchmark for the given sorting algorithm
+func runBenchmark(sortingAlgorithm func([]int32), sortingAlgorithmName string) {
 	generationMethodList := []struct {
 		generator func(int) []int32
 		name      string
@@ -76,14 +77,13 @@ func benchmarkBubbleSort() {
 		{tools.GenerateOneThirdSortedArray, "33% sorted"},
 		{tools.GenerateTwoThirdsSortedArray, "66% sorted"},
 	}
-	sizes := []int{1000, 5000, 10000}
+	sizes := []int{50, 100, 500, 1000, 5000, 10000}
 	results := make([][]int64, len(generationMethodList))
 	iterations := 10
 	for generatorIndex, generator := range generationMethodList {
 		for _, size := range sizes {
-			fmt.Print("Benchmarking size: ", size, "Generation method: ", generator.name, "... ")
-			algorithm := algorithms.BubbleSort
-			averageDuration, sortingError := tools.SortArrayIterate(size, algorithm, generator.generator, iterations, true)
+			fmt.Print("Benchmarking ", sortingAlgorithmName, " Size: ", size, " Generation method: ", generator.name, "... ")
+			averageDuration, sortingError := tools.SortArrayIterate(size, sortingAlgorithm, generator.generator, iterations, true)
 			if sortingError != nil {
 				fmt.Println("Error sorting array:", sortingError)
 				return
@@ -92,20 +92,31 @@ func benchmarkBubbleSort() {
 			fmt.Println("Time taken:", averageDuration)
 		}
 	}
-	fmt.Println("Benchmark results:")
-	fmt.Println("Size\tFully Random\tSorted\tReverse Sorted\t33% Sorted\t66% Sorted")
-	for i, size := range sizes {
-		fmt.Printf("%d\t", size)
-		for j := 0; j < len(generationMethodList); j++ {
-			if len(results[j]) > i {
-				fmt.Printf("%v\t", results[j][i])
-			} else {
-				fmt.Print("N/A\t")
-			}
-		}
-		fmt.Println()
+	fileContent := make([]string, 0)
+	header := "Size"
+	for _, generator := range generationMethodList {
+		header += ";" + generator.name
 	}
+	fileContent = append(fileContent, header)
+	for sizeIndex, size := range sizes {
+		line := strconv.FormatInt(int64(size), 10)
+		for generatorIndex := 0; generatorIndex < len(generationMethodList); generatorIndex++ {
+			line += ";" + strconv.FormatInt(results[generatorIndex][sizeIndex], 10)
+		}
+		fileContent = append(fileContent, line)
+	}
+	fmt.Println("Benchmark results:")
+	for _, line := range fileContent {
+		fmt.Println(line)
+	}
+	fileName := sortingAlgorithmName + ".csv"
+	WriteToFile(fileName, fileContent)
 	return
+}
+
+func handleBenchmark() {
+	algorithm, name := chooseSortingAlgorithm()
+	runBenchmark(algorithm, name)
 }
 
 // readInt reads an integer from the user with a prompt and validates it against min and max values.
@@ -188,4 +199,23 @@ func chooseSortingAlgorithm() (func([]int32), string) {
 			continue
 		}
 	}
+}
+
+// WriteToFile writes the benchmark results to a file.
+func WriteToFile(filename string, results []string) {
+	file, err := os.Create(filename)
+	if err != nil {
+		fmt.Println("Error creating file:", err)
+		return
+	}
+	defer file.Close()
+
+	for _, line := range results {
+		_, err := file.WriteString(line + "\n")
+		if err != nil {
+			fmt.Println("Error writing to file:", err)
+			return
+		}
+	}
+	fmt.Println("Results written to", filename)
 }

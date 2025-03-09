@@ -9,11 +9,6 @@ import (
 
 const MaxInt = math.MaxInt32 - 1
 
-// SortingResults holds the name of the sorting algorithm and the results for various initial conditions.
-type SortingResults struct {
-	TimeResults []time.Duration
-}
-
 // PrintArray prints the elements of the array. If the array is empty, it prints a message indicating that.
 func PrintArray(arr []int32) {
 	if len(arr) == 0 {
