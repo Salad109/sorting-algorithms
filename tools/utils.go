@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"os"
+	"sort"
 	"time"
 )
 
@@ -66,7 +68,7 @@ func SortArray(size int, sortingAlgorithm func([]int32), generationMethod func(i
 
 // SortArrayIterate sorts an array multiple times using the provided sorting algorithm and measures the average time taken.
 func SortArrayIterate(size int, sortingAlgorithm func([]int32), generationMethod func(int) []int32, iterations int, beQuiet bool) (time.Duration, error) {
-	var totalTime time.Duration
+	times := make([]time.Duration, iterations)
 
 	// Measure average time over multiple runs
 	for i := 0; i < iterations; i++ {
@@ -81,8 +83,62 @@ func SortArrayIterate(size int, sortingAlgorithm func([]int32), generationMethod
 			fmt.Println("==========================")
 		}
 
-		totalTime += sortingTime
+		times[i] = sortingTime
 	}
 
-	return totalTime / time.Duration(iterations), nil
+	// Trim the extremes
+	times = TrimExtremes(times)
+	if len(times) == 0 {
+		return 0, errors.New("no valid times to calculate average")
+	}
+	// Calculate average time
+	totalTime := time.Duration(0)
+	for _, t := range times {
+		totalTime += t
+	}
+	averageTime := totalTime / time.Duration(len(times))
+	if !beQuiet {
+		fmt.Println("Average time taken:", averageTime)
+	}
+	return averageTime, nil
+}
+
+// WriteToFile writes the benchmark results to a file.
+func WriteToFile(filename string, results []string) {
+	file, err := os.Create(filename)
+	if err != nil {
+		fmt.Println("Error creating file:", err)
+		return
+	}
+	defer file.Close()
+
+	for _, line := range results {
+		_, err := file.WriteString(line + "\n")
+		if err != nil {
+			fmt.Println("Error writing to file:", err)
+			return
+		}
+	}
+	fmt.Println("Results written to", filename)
+}
+
+func TrimExtremes(arr []time.Duration) []time.Duration {
+	if len(arr) == 0 {
+		return []time.Duration{}
+	}
+	if len(arr) <= 2 {
+		return arr
+	}
+	// Sort the array
+	sort.Slice(arr, func(i, j int) bool {
+		return arr[i] < arr[j]
+	})
+	// Calculate the number of elements to remove
+	numToRemove := int(float64(len(arr)) * 0.2)
+	if numToRemove < 1 {
+		numToRemove = 1
+	}
+	// Remove the smallest and largest elements
+	trimmedArr := arr[numToRemove : len(arr)-numToRemove]
+	return trimmedArr
 }

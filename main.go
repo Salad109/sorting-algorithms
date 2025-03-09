@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"sorting-algorithms/algorithms"
 	"sorting-algorithms/tools"
 	"strconv"
@@ -74,12 +73,12 @@ func runBenchmark(sortingAlgorithm func([]int32), sortingAlgorithmName string) {
 		{tools.GenerateFullyRandomArray, "Fully random"},
 		{tools.GenerateSortedArray, "Sorted"},
 		{tools.GenerateReverseSortedArray, "Reverse sorted"},
-		{tools.GenerateOneThirdSortedArray, "33% sorted"},
-		{tools.GenerateTwoThirdsSortedArray, "66% sorted"},
+		{tools.GenerateOneThirdSortedArray, "33 sorted"},
+		{tools.GenerateTwoThirdsSortedArray, "66 sorted"},
 	}
-	sizes := []int{50, 100, 500, 1000, 5000, 10000}
+	sizes := []int{100, 2000, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000}
 	results := make([][]int64, len(generationMethodList))
-	iterations := 10
+	iterations := 100
 	for generatorIndex, generator := range generationMethodList {
 		for _, size := range sizes {
 			fmt.Print("Benchmarking ", sortingAlgorithmName, " Size: ", size, " Generation method: ", generator.name, "... ")
@@ -89,7 +88,7 @@ func runBenchmark(sortingAlgorithm func([]int32), sortingAlgorithmName string) {
 				return
 			}
 			results[generatorIndex] = append(results[generatorIndex], averageDuration.Microseconds())
-			fmt.Println("Time taken:", averageDuration)
+			fmt.Println("Average time taken:", averageDuration)
 		}
 	}
 	fileContent := make([]string, 0)
@@ -109,8 +108,7 @@ func runBenchmark(sortingAlgorithm func([]int32), sortingAlgorithmName string) {
 	for _, line := range fileContent {
 		fmt.Println(line)
 	}
-	fileName := sortingAlgorithmName + ".csv"
-	WriteToFile(fileName, fileContent)
+	tools.WriteToFile(sortingAlgorithmName+".csv", fileContent)
 	return
 }
 
@@ -199,23 +197,4 @@ func chooseSortingAlgorithm() (func([]int32), string) {
 			continue
 		}
 	}
-}
-
-// WriteToFile writes the benchmark results to a file.
-func WriteToFile(filename string, results []string) {
-	file, err := os.Create(filename)
-	if err != nil {
-		fmt.Println("Error creating file:", err)
-		return
-	}
-	defer file.Close()
-
-	for _, line := range results {
-		_, err := file.WriteString(line + "\n")
-		if err != nil {
-			fmt.Println("Error writing to file:", err)
-			return
-		}
-	}
-	fmt.Println("Results written to", filename)
 }
