@@ -12,8 +12,8 @@ func main() {
 	for {
 		fmt.Println("Choose an action:")
 		fmt.Println("\t0. Exit")
-		fmt.Println("\t1. Sort array using bubble sort")
-		fmt.Println("\t2. Sort array using bubble sort multiple times")
+		fmt.Println("\t1. Sort array once")
+		fmt.Println("\t2. Sort array multiple times")
 
 		action := readInt("", 0, 2)
 
@@ -21,22 +21,25 @@ func main() {
 		case 0:
 			return
 		case 1:
+			algorithm, name := chooseSortingAlgorithm()
 			size := readInt("Enter the size of the array: ", 0, tools.MaxInt)
 			generator := readGenerationMethod()
 
-			fmt.Println("Sorting array using Bubble Sort...")
-			duration, sortingError := tools.SortArray(size, algorithms.BubbleSort, generator)
+			fmt.Println("Sorting array using", name)
+			duration, sortingError := tools.SortArray(size, algorithm, generator)
 			if sortingError != nil {
 				fmt.Println("Error sorting array:", sortingError)
 				continue
 			}
 			fmt.Println("Array sorted successfully. Time taken:", duration)
 		case 2:
+			algorithm, name := chooseSortingAlgorithm()
 			size := readInt("Enter the size of the array: ", 0, tools.MaxInt)
 			generator := readGenerationMethod()
 			iterations := readInt("Enter the number of iterations: ", 1, tools.MaxInt)
 
-			averageDuration, sortingError := tools.SortArrayIterate(size, algorithms.BubbleSort, generator, iterations)
+			fmt.Println("Sorting array using", name)
+			averageDuration, sortingError := tools.SortArrayIterate(size, algorithm, generator, iterations)
 			if sortingError != nil {
 				fmt.Println("Error sorting array:", sortingError)
 				continue
@@ -97,6 +100,28 @@ func readGenerationMethod() func(int) []int32 {
 			return tools.GenerateTwoThirdsSortedArray
 		default:
 			fmt.Println("Invalid choice. Please try again.")
+			continue
+		}
+	}
+}
+
+// chooseSortingAlgorithm prompts the user to choose a sorting algorithm.
+func chooseSortingAlgorithm() (func([]int32), string) {
+	for {
+		fmt.Println("Choose a sorting algorithm:")
+		fmt.Println("\t1. Bubble Sort")
+		fmt.Println("\t2. Insertion Sort")
+		fmt.Println("\t3. Binary Insertion Sort")
+		choice := readInt("", 1, 3)
+		switch choice {
+		case 1:
+			return algorithms.BubbleSort, "Bubble Sort"
+		case 2:
+			return algorithms.InsertionSort, "Insertion Sort"
+		case 3:
+			return algorithms.BinaryInsertionSort, "Binary Insertion Sort"
+		default:
+			fmt.Println("Invalid choice.")
 			continue
 		}
 	}
