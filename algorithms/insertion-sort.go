@@ -1,7 +1,10 @@
 package algorithms
 
-// InsertionSort sorts a slice of integers using the insertion sort algorithm.
-func InsertionSort(arr []int32) {
+// InsertionSorter implements the Sorter interface using insertion sort algorithm
+type InsertionSorter struct{}
+
+// Sort sorts a slice of integers using the insertion sort algorithm
+func (is InsertionSorter) Sort(arr []int32) {
 	n := len(arr)
 
 	// Start from the second element (index 1)
@@ -22,4 +25,9 @@ func InsertionSort(arr []int32) {
 		// Place the key in its correct position
 		arr[j+1] = key
 	}
+}
+
+// Name returns the name of this sorting algorithm
+func (is InsertionSorter) Name() string {
+	return "Insertion Sort"
 }

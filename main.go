@@ -35,12 +35,12 @@ func main() {
 
 // sortArrayOnce handles the logic for sorting an array once
 func sortArrayOnce() {
-	algorithm, name := chooseSortingAlgorithm()
+	sorter := chooseSortingAlgorithm()
 	size := readInt("Enter the size of the array: ", 0, tools.MaxInt)
 	generator := readGenerationMethod()
 
-	fmt.Println("Sorting array using", name)
-	duration, sortingError := tools.SortArray(size, algorithm, generator, false)
+	fmt.Println("Sorting array using", sorter.Name())
+	duration, sortingError := tools.SortArray(size, sorter, generator, false)
 	if sortingError != nil {
 		fmt.Println("Error sorting array:", sortingError)
 		return
@@ -50,13 +50,13 @@ func sortArrayOnce() {
 
 // sortArrayMultipleTimes handles the logic for sorting an array multiple times
 func sortArrayMultipleTimes() {
-	algorithm, name := chooseSortingAlgorithm()
+	sorter := chooseSortingAlgorithm()
 	size := readInt("Enter the size of the array: ", 0, tools.MaxInt)
 	generator := readGenerationMethod()
 	iterations := readInt("Enter the number of iterations: ", 1, tools.MaxInt)
 
-	fmt.Println("Sorting array using", name)
-	averageDuration, sortingError := tools.SortArrayIterate(size, algorithm, generator, iterations, false)
+	fmt.Println("Sorting array using", sorter.Name())
+	averageDuration, sortingError := tools.SortArrayIterate(size, sorter, generator, iterations, false)
 	if sortingError != nil {
 		fmt.Println("Error sorting array:", sortingError)
 		return
@@ -66,8 +66,8 @@ func sortArrayMultipleTimes() {
 
 // handleBenchmark delegates to the benchmark package
 func handleBenchmark() {
-	algorithm, name := chooseSortingAlgorithm()
-	tools.RunBenchmark(algorithm, name)
+	sorter := chooseSortingAlgorithm()
+	tools.RunBenchmark(sorter)
 }
 
 // readInt reads an integer from the user with a prompt and validates it against min and max values.
@@ -125,7 +125,7 @@ func readGenerationMethod() func(int) []int32 {
 }
 
 // chooseSortingAlgorithm prompts the user to choose a sorting algorithm.
-func chooseSortingAlgorithm() (func([]int32), string) {
+func chooseSortingAlgorithm() algorithms.Sorter {
 	for {
 		fmt.Println("Choose a sorting algorithm:")
 		fmt.Println("\t1. Bubble Sort")
@@ -136,15 +136,15 @@ func chooseSortingAlgorithm() (func([]int32), string) {
 		choice := readInt("", 1, 5)
 		switch choice {
 		case 1:
-			return algorithms.BubbleSort, "Bubble Sort"
+			return algorithms.BubbleSorter{}
 		case 2:
-			return algorithms.InsertionSort, "Insertion Sort"
+			return algorithms.InsertionSorter{}
 		case 3:
-			return algorithms.BinaryInsertionSort, "Binary Insertion Sort"
+			return algorithms.BinaryInsertionSorter{}
 		case 4:
-			return algorithms.HeapSort, "Heap Sort"
+			return algorithms.HeapSorter{}
 		case 5:
-			return algorithms.QuickSort, "Quick Sort"
+			return algorithms.QuickSorter{}
 		default:
 			fmt.Println("Invalid choice.")
 			continue

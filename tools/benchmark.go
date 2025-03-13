@@ -2,6 +2,7 @@ package tools
 
 import (
 	"fmt"
+	"sorting-algorithms/algorithms"
 	"strconv"
 )
 
@@ -24,15 +25,20 @@ func getDefaultGenerators() []GeneratorInfo {
 
 // getDefaultSizes returns standard array sizes for benchmarking
 func getDefaultSizes() []int {
-	return []int{100, 2000, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000}
+	return []int{100, 2500, 5000, 7500, 10000, 12500, 15000, 17500, 22500, 25000, 30000, 35000, 40000, 45000, 50000, 60000, 70000, 80000}
+}
+
+// getDefaultIterations returns the default number of iterations for benchmarking
+func getDefaultIterations() int {
+	return 100
 }
 
 // RunBenchmark performs benchmark tests on the given sorting algorithm
-func RunBenchmark(sortingAlgorithm func([]int32), algorithmName string) {
+func RunBenchmark(sorter algorithms.Sorter) {
 	// Get benchmark configuration
 	sizes := getDefaultSizes()
 	generators := getDefaultGenerators()
-	iterations := 100
+	iterations := getDefaultIterations()
 
 	// Create results matrix [generator][size]
 	results := make([][]int64, len(generators))
@@ -42,7 +48,7 @@ func RunBenchmark(sortingAlgorithm func([]int32), algorithmName string) {
 
 	// Run benchmarks
 	fmt.Printf("\nRunning benchmark for %s with %d iterations per test\n\n",
-		algorithmName, iterations)
+		sorter.Name(), iterations)
 
 	for genIdx, generator := range generators {
 		for sizeIdx, size := range sizes {
@@ -50,7 +56,7 @@ func RunBenchmark(sortingAlgorithm func([]int32), algorithmName string) {
 				size, generator.Name)
 
 			duration, err := SortArrayIterate(
-				size, sortingAlgorithm, generator.Func, iterations, true)
+				size, sorter, generator.Func, iterations, true)
 
 			if err != nil {
 				fmt.Printf("\nError: %v\n", err)
@@ -67,7 +73,7 @@ func RunBenchmark(sortingAlgorithm func([]int32), algorithmName string) {
 	csvData := generateResultCSV(sizes, generators, results)
 
 	// Save results to file
-	filename := algorithmName + ".csv"
+	filename := sorter.Name() + ".csv"
 	err := WriteToFile(filename, csvData)
 	if err != nil {
 		fmt.Printf("Error saving results: %v\n", err)

@@ -6,6 +6,7 @@ import (
 	"math"
 	"os"
 	"sort"
+	"sorting-algorithms/algorithms"
 	"time"
 )
 
@@ -45,14 +46,14 @@ func ValidateSort(arr []int32) bool {
 }
 
 // SortArray sorts an array using the provided sorting algorithm and measures the time taken.
-func SortArray(size int, sortingAlgorithm func([]int32), generationMethod func(int) []int32, beQuiet bool) (time.Duration, error) {
+func SortArray(size int, sorter algorithms.Sorter, generationMethod func(int) []int32, beQuiet bool) (time.Duration, error) {
 	arr := generationMethod(size)
 	if !beQuiet {
 		PrintArray(arr)
 	}
 	// Measure execution time
 	start := time.Now()
-	sortingAlgorithm(arr)
+	sorter.Sort(arr)
 	elapsed := time.Since(start)
 
 	if !beQuiet {
@@ -67,7 +68,7 @@ func SortArray(size int, sortingAlgorithm func([]int32), generationMethod func(i
 }
 
 // SortArrayIterate sorts an array multiple times using the provided sorting algorithm and measures the average time taken.
-func SortArrayIterate(size int, sortingAlgorithm func([]int32), generationMethod func(int) []int32, iterations int, beQuiet bool) (time.Duration, error) {
+func SortArrayIterate(size int, sorter algorithms.Sorter, generationMethod func(int) []int32, iterations int, beQuiet bool) (time.Duration, error) {
 	times := make([]time.Duration, iterations)
 
 	// Measure average time over multiple runs
@@ -75,7 +76,7 @@ func SortArrayIterate(size int, sortingAlgorithm func([]int32), generationMethod
 		if !beQuiet {
 			fmt.Println("====== Iteration:", i, "======")
 		}
-		sortingTime, sortingError := SortArray(size, sortingAlgorithm, generationMethod, beQuiet)
+		sortingTime, sortingError := SortArray(size, sorter, generationMethod, beQuiet)
 		if sortingError != nil {
 			return 0, sortingError
 		}

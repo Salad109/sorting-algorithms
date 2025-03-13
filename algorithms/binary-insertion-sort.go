@@ -1,7 +1,10 @@
 package algorithms
 
-// BinaryInsertionSort sorts a slice of integers using binary insertion sort.
-func BinaryInsertionSort(arr []int32) {
+// BinaryInsertionSorter implements the Sorter interface using binary insertion sort
+type BinaryInsertionSorter struct{}
+
+// Sort sorts a slice of integers using the binary insertion sort algorithm
+func (bis BinaryInsertionSorter) Sort(arr []int32) {
 	n := len(arr)
 
 	for i := 1; i < n; i++ {
@@ -9,7 +12,7 @@ func BinaryInsertionSort(arr []int32) {
 		key := arr[i]
 
 		// Find the position where key should be inserted using binary search
-		insertionPoint := binarySearch(arr, 0, i-1, key)
+		insertionPoint := bis.binarySearch(arr, 0, i-1, key)
 
 		// Shift all elements to the right to make space for the key
 		if insertionPoint < i {
@@ -30,7 +33,7 @@ func BinaryInsertionSort(arr []int32) {
 // binarySearch finds the position where x should be inserted in a sorted array
 // such that all elements before this position are less than or equal to x
 // and all elements after this position are greater than x
-func binarySearch(arr []int32, left, right int, x int32) int {
+func (bis BinaryInsertionSorter) binarySearch(arr []int32, left, right int, x int32) int {
 	if right <= left {
 		if arr[left] > x {
 			return left
@@ -45,8 +48,13 @@ func binarySearch(arr []int32, left, right int, x int32) int {
 	}
 
 	if x > arr[mid] {
-		return binarySearch(arr, mid+1, right, x)
+		return bis.binarySearch(arr, mid+1, right, x)
 	}
 
-	return binarySearch(arr, left, mid-1, x)
+	return bis.binarySearch(arr, left, mid-1, x)
+}
+
+// Name returns the name of this sorting algorithm
+func (bis BinaryInsertionSorter) Name() string {
+	return "Binary Insertion Sort"
 }
