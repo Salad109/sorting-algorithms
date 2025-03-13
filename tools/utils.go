@@ -104,22 +104,22 @@ func SortArrayIterate(size int, sortingAlgorithm func([]int32), generationMethod
 }
 
 // WriteToFile writes the benchmark results to a file.
-func WriteToFile(filename string, results []string) {
+func WriteToFile(filename string, results []string) error {
 	file, err := os.Create(filename)
 	if err != nil {
-		fmt.Println("Error creating file:", err)
-		return
+		return fmt.Errorf("error creating file: %w", err)
 	}
 	defer file.Close()
 
 	for _, line := range results {
 		_, err := file.WriteString(line + "\n")
 		if err != nil {
-			fmt.Println("Error writing to file:", err)
-			return
+			return fmt.Errorf("error writing to file: %w", err)
 		}
 	}
+
 	fmt.Println("Results written to", filename)
+	return nil
 }
 
 func TrimExtremes(arr []time.Duration) []time.Duration {

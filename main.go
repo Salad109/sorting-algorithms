@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Sorting algorithms runBenchmark program")
+	fmt.Println("Sorting algorithms benchmark program")
 	for {
 		fmt.Println("Choose an action:")
 		fmt.Println("\t0. Exit")
@@ -64,57 +64,10 @@ func sortArrayMultipleTimes() {
 	fmt.Println("Array sorted successfully. Average time taken:", averageDuration)
 }
 
-// runBenchmark runs a runBenchmark for the given sorting algorithm
-func runBenchmark(sortingAlgorithm func([]int32), sortingAlgorithmName string) {
-	generationMethodList := []struct {
-		generator func(int) []int32
-		name      string
-	}{
-		{tools.GenerateFullyRandomArray, "Fully random"},
-		{tools.GenerateSortedArray, "Sorted"},
-		{tools.GenerateReverseSortedArray, "Reverse sorted"},
-		{tools.GenerateOneThirdSortedArray, "33 sorted"},
-		{tools.GenerateTwoThirdsSortedArray, "66 sorted"},
-	}
-	sizes := []int{100, 2000, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000}
-	results := make([][]int64, len(generationMethodList))
-	iterations := 100
-	for generatorIndex, generator := range generationMethodList {
-		for _, size := range sizes {
-			fmt.Print("Benchmarking ", sortingAlgorithmName, " Size: ", size, " Generation method: ", generator.name, "... ")
-			averageDuration, sortingError := tools.SortArrayIterate(size, sortingAlgorithm, generator.generator, iterations, true)
-			if sortingError != nil {
-				fmt.Println("Error sorting array:", sortingError)
-				return
-			}
-			results[generatorIndex] = append(results[generatorIndex], averageDuration.Microseconds())
-			fmt.Println("Average time taken:", averageDuration)
-		}
-	}
-	fileContent := make([]string, 0)
-	header := "Size"
-	for _, generator := range generationMethodList {
-		header += ";" + generator.name
-	}
-	fileContent = append(fileContent, header)
-	for sizeIndex, size := range sizes {
-		line := strconv.FormatInt(int64(size), 10)
-		for generatorIndex := 0; generatorIndex < len(generationMethodList); generatorIndex++ {
-			line += ";" + strconv.FormatInt(results[generatorIndex][sizeIndex], 10)
-		}
-		fileContent = append(fileContent, line)
-	}
-	fmt.Println("Benchmark results:")
-	for _, line := range fileContent {
-		fmt.Println(line)
-	}
-	tools.WriteToFile(sortingAlgorithmName+".csv", fileContent)
-	return
-}
-
+// handleBenchmark delegates to the benchmark package
 func handleBenchmark() {
 	algorithm, name := chooseSortingAlgorithm()
-	runBenchmark(algorithm, name)
+	tools.RunBenchmark(algorithm, name)
 }
 
 // readInt reads an integer from the user with a prompt and validates it against min and max values.
