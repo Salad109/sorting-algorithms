@@ -6,26 +6,43 @@ import (
 	"strconv"
 )
 
-// GeneratorInfo pairs a generator function with its descriptive name
-type GeneratorInfo struct {
+// GeneratorInfoInt32 pairs a generator function with its descriptive name
+type GeneratorInfoInt32 struct {
 	Func func(int) []int32
 	Name string
 }
 
-// getDefaultGenerators returns a standard set of array generators
-func getDefaultGenerators() []GeneratorInfo {
-	return []GeneratorInfo{
-		{GenerateFullyRandomArray, "Fully random"},
-		{GenerateSortedArray, "Sorted"},
-		{GenerateReverseSortedArray, "Reverse sorted"},
-		{GenerateOneThirdSortedArray, "33% sorted"},
-		{GenerateTwoThirdsSortedArray, "66% sorted"},
+// GeneratorInfoFloat32 pairs a generator function with its descriptive name
+type GeneratorInfoFloat32 struct {
+	Func func(int) []float32
+	Name string
+}
+
+// getDefaultGeneratorsInt32 returns a standard set of array generators
+func getDefaultGeneratorsInt32() []GeneratorInfoInt32 {
+	return []GeneratorInfoInt32{
+		{GenerateFullyRandomArrayInt32, "Fully random"},
+		{GenerateSortedArrayInt32, "Sorted"},
+		{GenerateReverseSortedArrayInt32, "Reverse sorted"},
+		{GenerateOneThirdSortedArrayInt32, "33% sorted"},
+		{GenerateTwoThirdsSortedArrayInt32, "66% sorted"},
+	}
+}
+
+// getDefaultGeneratorsFloat32 returns a standard set of array generators for float32
+func getDefaultGeneratorsFloat32() []GeneratorInfoFloat32 {
+	return []GeneratorInfoFloat32{
+		{GenerateFullyRandomArrayFloat32, "Fully random"},
+		{GenerateSortedArrayFloat32, "Sorted"},
+		{GenerateReverseSortedArrayFloat32, "Reverse sorted"},
+		{GenerateOneThirdSortedArrayFloat32, "33% sorted"},
+		{GenerateTwoThirdsSortedArrayFloat32, "66% sorted"},
 	}
 }
 
 // getDefaultSizes returns standard array sizes for benchmarking
 func getDefaultSizes() []int {
-	return []int{100, 2500, 5000, 7500, 10000, 12500, 15000, 17500, 22500, 25000, 30000, 35000, 40000, 45000, 50000, 60000, 70000, 80000}
+	return []int{100, 2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000, 22500, 25000, 30000, 35000, 40000, 45000, 50000, 60000, 70000, 80000}
 }
 
 // getDefaultIterations returns the default number of iterations for benchmarking
@@ -33,11 +50,11 @@ func getDefaultIterations() int {
 	return 100
 }
 
-// RunBenchmark performs benchmark tests on the given sorting algorithm
-func RunBenchmark(sorter algorithms.Sorter) {
+// RunBenchmarkInt32 performs benchmark tests on the given sorting algorithm
+func RunBenchmarkInt32(sorter algorithms.Sorter) {
 	// Get benchmark configuration
 	sizes := getDefaultSizes()
-	generators := getDefaultGenerators()
+	generators := getDefaultGeneratorsInt32()
 	iterations := getDefaultIterations()
 
 	// Create results matrix [generator][size]
@@ -70,7 +87,7 @@ func RunBenchmark(sorter algorithms.Sorter) {
 	}
 
 	// Generate CSV content
-	csvData := generateResultCSV(sizes, generators, results)
+	csvData := generateResultCSVInt32(sizes, generators, results)
 
 	// Save results to file
 	filename := sorter.Name() + ".csv"
@@ -82,11 +99,11 @@ func RunBenchmark(sorter algorithms.Sorter) {
 	}
 
 	// Print summary table
-	printResultTable(sizes, generators, results)
+	printResultTableInt32(sizes, generators, results)
 }
 
-// generateResultCSV creates CSV content from benchmark results
-func generateResultCSV(sizes []int, generators []GeneratorInfo, results [][]int64) []string {
+// generateResultCSVInt32 creates CSV content from benchmark results
+func generateResultCSVInt32(sizes []int, generators []GeneratorInfoInt32, results [][]int64) []string {
 	lines := make([]string, 0, len(sizes)+1)
 
 	// Add header row
@@ -108,8 +125,8 @@ func generateResultCSV(sizes []int, generators []GeneratorInfo, results [][]int6
 	return lines
 }
 
-// printResultTable displays benchmark results in a formatted table
-func printResultTable(sizes []int, generators []GeneratorInfo, results [][]int64) {
+// printResultTableInt32 displays benchmark results in a formatted table
+func printResultTableInt32(sizes []int, generators []GeneratorInfoInt32, results [][]int64) {
 	fmt.Println("Benchmark results (microseconds):")
 
 	// Print header

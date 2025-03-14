@@ -67,7 +67,7 @@ func sortArrayMultipleTimes() {
 // handleBenchmark delegates to the benchmark package
 func handleBenchmark() {
 	sorter := chooseSortingAlgorithm()
-	tools.RunBenchmark(sorter)
+	tools.RunBenchmarkInt32(sorter)
 }
 
 // readInt reads an integer from the user with a prompt and validates it against min and max values.
@@ -108,15 +108,15 @@ func readGenerationMethod() func(int) []int32 {
 		choice := readInt("", 1, 5)
 		switch choice {
 		case 1:
-			return tools.GenerateFullyRandomArray
+			return tools.GenerateFullyRandomArrayInt32
 		case 2:
-			return tools.GenerateSortedArray
+			return tools.GenerateSortedArrayInt32
 		case 3:
-			return tools.GenerateReverseSortedArray
+			return tools.GenerateReverseSortedArrayInt32
 		case 4:
-			return tools.GenerateOneThirdSortedArray
+			return tools.GenerateOneThirdSortedArrayInt32
 		case 5:
-			return tools.GenerateTwoThirdsSortedArray
+			return tools.GenerateTwoThirdsSortedArrayInt32
 		default:
 			fmt.Println("Invalid choice. Please try again.")
 			continue
