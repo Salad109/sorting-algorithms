@@ -90,7 +90,7 @@ func RunBenchmarkInt32(sorter algorithms.Sorter) {
 	csvData := generateResultCSVInt32(sizes, generators, results)
 
 	// Save results to file
-	filename := sorter.Name() + ".csv"
+	filename := sorter.Name() + " int32.csv"
 	err := WriteToFile(filename, csvData)
 	if err != nil {
 		fmt.Printf("Error saving results: %v\n", err)
