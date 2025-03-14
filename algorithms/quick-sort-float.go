@@ -1,27 +1,27 @@
 package algorithms
 
-// QuickSorter implements the Sorter interface using quick sort algorithm
-type QuickSorter struct{}
+// QuickFloatSorter implements the FloatSorter interface using quick sort algorithm
+type QuickFloatSorter struct{}
 
-// Sort sorts a slice of integers using the quick sort algorithm
-func (qs QuickSorter) Sort(arr []int32) {
-	quickSort(arr, 0, len(arr)-1)
+// SortFloat sorts a slice of floats using the quick sort algorithm
+func (qfs QuickFloatSorter) SortFloat(arr []float32) {
+	quickSortFloat(arr, 0, len(arr)-1)
 }
 
 // quickSort is a recursive function that implements the quick sort algorithm
-func quickSort(arr []int32, low int, high int) {
+func quickSortFloat(arr []float32, low int, high int) {
 	if low < high {
 		// Partition the array
-		pi := partition(arr, low, high)
+		pi := partitionFloat(arr, low, high)
 
 		// Recursively sort elements before and after partition
-		quickSort(arr, low, pi-1)
-		quickSort(arr, pi+1, high)
+		quickSortFloat(arr, low, pi-1)
+		quickSortFloat(arr, pi+1, high)
 	}
 }
 
 // partition rearranges the elements in the array and returns the index of the pivot
-func partition(arr []int32, low int, high int) int {
+func partitionFloat(arr []float32, low int, high int) int {
 	pivot := arr[high] // pivot
 	i := low - 1       // Index of smaller element
 
@@ -37,6 +37,6 @@ func partition(arr []int32, low int, high int) int {
 }
 
 // Name returns the name of this sorting algorithm
-func (qs QuickSorter) Name() string {
-	return "Quick Sort"
+func (qfs QuickFloatSorter) Name() string {
+	return "Quick Float Sort"
 }

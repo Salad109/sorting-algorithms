@@ -235,9 +235,9 @@ func chooseFloatSortingAlgorithm() algorithms.FloatSorter {
 		fmt.Println("\t1. Bubble Sort")
 		fmt.Println("\t2. Insertion Sort")
 		fmt.Println("\t3. Binary Insertion Sort")
-		// fmt.Println("\t4. Heap Sort")
-		// fmt.Println("\t5. Quick Sort")
-		choice := readInt("", 1, 3) // Change to 5 when implementing other algorithms
+		fmt.Println("\t4. Heap Sort")
+		fmt.Println("\t5. Quick Sort")
+		choice := readInt("", 1, 5)
 		switch choice {
 		case 1:
 			return algorithms.BubbleFloatSorter{}
@@ -245,10 +245,10 @@ func chooseFloatSortingAlgorithm() algorithms.FloatSorter {
 			return algorithms.InsertionFloatSorter{}
 		case 3:
 			return algorithms.BinaryInsertionFloatSorter{}
-		// case 4:
-		//     return algorithms.HeapFloatSorter{}
-		// case 5:
-		//     return algorithms.QuickFloatSorter{}
+		case 4:
+			return algorithms.HeapFloatSorter{}
+		case 5:
+			return algorithms.QuickFloatSorter{}
 		default:
 			fmt.Println("Invalid choice.")
 			continue

@@ -1,24 +1,24 @@
 package algorithms
 
-// HeapSorter implements the Sorter interface using heap sort algorithm
-type HeapSorter struct{}
+// HeapFloatSorter implements the FloatSorter interface using heap sort algorithm
+type HeapFloatSorter struct{}
 
-// Sort sorts a slice of integers using the heap sort algorithm
-func (hs HeapSorter) Sort(arr []int32) {
+// SortFloat sorts a slice of floats using the heap sort algorithm
+func (hfs HeapFloatSorter) SortFloat(arr []float32) {
 	n := len(arr)
 	// Build a max heap
 	for i := n/2 - 1; i >= 0; i-- {
-		hs.heapify(arr, n, i)
+		hfs.heapify(arr, n, i)
 	}
 	// One by one extract elements from heap
 	for i := n - 1; i > 0; i-- {
 		arr[i], arr[0] = arr[0], arr[i] // Swap
-		hs.heapify(arr, i, 0)
+		hfs.heapify(arr, i, 0)
 	}
 }
 
 // heapify function to maintain the heap property
-func (hs HeapSorter) heapify(arr []int32, n int, i int) {
+func (hfs HeapFloatSorter) heapify(arr []float32, n int, i int) {
 	largest := i     // Initialize largest as root
 	left := 2*i + 1  // left child index
 	right := 2*i + 2 // right child index
@@ -36,11 +36,11 @@ func (hs HeapSorter) heapify(arr []int32, n int, i int) {
 	// If largest is not root
 	if largest != i {
 		arr[i], arr[largest] = arr[largest], arr[i] // Swap
-		hs.heapify(arr, n, largest)
+		hfs.heapify(arr, n, largest)
 	}
 }
 
 // Name returns the name of this sorting algorithm
-func (hs HeapSorter) Name() string {
-	return "Heap Sort"
+func (hfs HeapFloatSorter) Name() string {
+	return "Heap Float Sort"
 }
