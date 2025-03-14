@@ -1,10 +1,12 @@
 package algorithms
 
-// BinaryInsertionSorter implements the Sorter interface using binary insertion sort
-type BinaryInsertionSorter struct{}
+import "golang.org/x/exp/constraints"
 
-// Sort sorts a slice of integers using the binary insertion sort algorithm
-func (bis BinaryInsertionSorter) Sort(arr []int32) {
+// BinaryInsertionSorter implements the Sorter interface using binary insertion sort
+type BinaryInsertionSorter[T constraints.Ordered] struct{}
+
+// Sort sorts a slice using the binary insertion sort algorithm
+func (bis BinaryInsertionSorter[T]) Sort(arr []T) {
 	n := len(arr)
 
 	for i := 1; i < n; i++ {
@@ -33,7 +35,7 @@ func (bis BinaryInsertionSorter) Sort(arr []int32) {
 // binarySearch finds the position where x should be inserted in a sorted array
 // such that all elements before this position are less than or equal to x
 // and all elements after this position are greater than x
-func (bis BinaryInsertionSorter) binarySearch(arr []int32, left, right int, x int32) int {
+func (bis BinaryInsertionSorter[T]) binarySearch(arr []T, left, right int, x T) int {
 	if right <= left {
 		if arr[left] > x {
 			return left
@@ -55,6 +57,6 @@ func (bis BinaryInsertionSorter) binarySearch(arr []int32, left, right int, x in
 }
 
 // Name returns the name of this sorting algorithm
-func (bis BinaryInsertionSorter) Name() string {
+func (bis BinaryInsertionSorter[T]) Name() string {
 	return "Binary Insertion Sort"
 }

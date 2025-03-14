@@ -1,10 +1,12 @@
 package algorithms
 
-// HeapSorter implements the Sorter interface using heap sort algorithm
-type HeapSorter struct{}
+import "golang.org/x/exp/constraints"
 
-// Sort sorts a slice of integers using the heap sort algorithm
-func (hs HeapSorter) Sort(arr []int32) {
+// HeapSorter implements the Sorter interface using heap sort algorithm
+type HeapSorter[T constraints.Ordered] struct{}
+
+// Sort sorts a slice using the heap sort algorithm
+func (hs HeapSorter[T]) Sort(arr []T) {
 	n := len(arr)
 	// Build a max heap
 	for i := n/2 - 1; i >= 0; i-- {
@@ -18,7 +20,7 @@ func (hs HeapSorter) Sort(arr []int32) {
 }
 
 // heapify function to maintain the heap property
-func (hs HeapSorter) heapify(arr []int32, n int, i int) {
+func (hs HeapSorter[T]) heapify(arr []T, n int, i int) {
 	largest := i     // Initialize largest as root
 	left := 2*i + 1  // left child index
 	right := 2*i + 2 // right child index
@@ -41,6 +43,6 @@ func (hs HeapSorter) heapify(arr []int32, n int, i int) {
 }
 
 // Name returns the name of this sorting algorithm
-func (hs HeapSorter) Name() string {
+func (hs HeapSorter[T]) Name() string {
 	return "Heap Sort"
 }

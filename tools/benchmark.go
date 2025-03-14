@@ -4,39 +4,24 @@ import (
 	"fmt"
 	"sorting-algorithms/algorithms"
 	"strconv"
+
+	"golang.org/x/exp/constraints"
 )
 
-// GeneratorInfoInt32 pairs a generator function with its descriptive name
-type GeneratorInfoInt32 struct {
-	Func func(int) []int32
+// GeneratorInfo pairs a generator function with its descriptive name
+type GeneratorInfo[T any] struct {
+	Func func(int) []T
 	Name string
 }
 
-// GeneratorInfoFloat32 pairs a generator function with its descriptive name
-type GeneratorInfoFloat32 struct {
-	Func func(int) []float32
-	Name string
-}
-
-// getDefaultGeneratorsInt32 returns a standard set of array generators
-func getDefaultGeneratorsInt32() []GeneratorInfoInt32 {
-	return []GeneratorInfoInt32{
-		{GenerateFullyRandomArrayInt32, "Fully random"},
-		{GenerateSortedArrayInt32, "Sorted"},
-		{GenerateReverseSortedArrayInt32, "Reverse sorted"},
-		{GenerateOneThirdSortedArrayInt32, "33% sorted"},
-		{GenerateTwoThirdsSortedArrayInt32, "66% sorted"},
-	}
-}
-
-// getDefaultGeneratorsFloat32 returns a standard set of array generators for float32
-func getDefaultGeneratorsFloat32() []GeneratorInfoFloat32 {
-	return []GeneratorInfoFloat32{
-		{GenerateFullyRandomArrayFloat32, "Fully random"},
-		{GenerateSortedArrayFloat32, "Sorted"},
-		{GenerateReverseSortedArrayFloat32, "Reverse sorted"},
-		{GenerateOneThirdSortedArrayFloat32, "33% sorted"},
-		{GenerateTwoThirdsSortedArrayFloat32, "66% sorted"},
+// getDefaultGenerators returns a standard set of array generators
+func getDefaultGenerators[T constraints.Integer | constraints.Float](randomFunc RandomValueGenerator[T]) []GeneratorInfo[T] {
+	return []GeneratorInfo[T]{
+		{func(size int) []T { return GenerateFullyRandomArray(size, randomFunc) }, "Fully random"},
+		{GenerateSortedArray[T], "Sorted"},
+		{GenerateReverseSortedArray[T], "Reverse sorted"},
+		{func(size int) []T { return GenerateOneThirdSortedArray(size, randomFunc) }, "33% sorted"},
+		{func(size int) []T { return GenerateTwoThirdsSortedArray(size, randomFunc) }, "66% sorted"},
 	}
 }
 
@@ -50,11 +35,11 @@ func getDefaultIterations() int {
 	return 100
 }
 
-// RunBenchmarkInt32 performs benchmark tests on the given sorting algorithm
-func RunBenchmarkInt32(sorter algorithms.Sorter) {
+// RunBenchmark performs benchmark tests on the given sorting algorithm
+func RunBenchmark[T constraints.Integer | constraints.Float](sorter algorithms.Sorter[T], randomFunc RandomValueGenerator[T], typeName string) {
 	// Get benchmark configuration
 	sizes := getDefaultSizes()
-	generators := getDefaultGeneratorsInt32()
+	generators := getDefaultGenerators(randomFunc)
 	iterations := getDefaultIterations()
 
 	// Create results matrix [generator][size]
@@ -87,10 +72,10 @@ func RunBenchmarkInt32(sorter algorithms.Sorter) {
 	}
 
 	// Generate CSV content
-	csvData := generateResultCSVInt32(sizes, generators, results)
+	csvData := generateResultCSV(sizes, generators, results)
 
 	// Save results to file
-	filename := sorter.Name() + " int32.csv"
+	filename := sorter.Name() + " " + typeName + ".csv"
 	err := WriteToFile(filename, csvData)
 	if err != nil {
 		fmt.Printf("Error saving results: %v\n", err)
@@ -99,11 +84,11 @@ func RunBenchmarkInt32(sorter algorithms.Sorter) {
 	}
 
 	// Print summary table
-	printResultTableInt32(sizes, generators, results)
+	printResultTable(sizes, generators, results)
 }
 
-// generateResultCSVInt32 creates CSV content from benchmark results
-func generateResultCSVInt32(sizes []int, generators []GeneratorInfoInt32, results [][]int64) []string {
+// generateResultCSV creates CSV content from benchmark results
+func generateResultCSV[T any](sizes []int, generators []GeneratorInfo[T], results [][]int64) []string {
 	lines := make([]string, 0, len(sizes)+1)
 
 	// Add header row
@@ -125,8 +110,8 @@ func generateResultCSVInt32(sizes []int, generators []GeneratorInfoInt32, result
 	return lines
 }
 
-// printResultTableInt32 displays benchmark results in a formatted table
-func printResultTableInt32(sizes []int, generators []GeneratorInfoInt32, results [][]int64) {
+// printResultTable displays benchmark results in a formatted table
+func printResultTable[T any](sizes []int, generators []GeneratorInfo[T], results [][]int64) {
 	fmt.Println("Benchmark results (microseconds):")
 
 	// Print header

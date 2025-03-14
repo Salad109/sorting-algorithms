@@ -8,12 +8,14 @@ import (
 	"sort"
 	"sorting-algorithms/algorithms"
 	"time"
+
+	"golang.org/x/exp/constraints"
 )
 
 const MaxInt = math.MaxInt32 - 1
 
 // PrintArray prints the elements of the array. If the array is empty, it prints a message indicating that.
-func PrintArray(arr []int32) {
+func PrintArray[T any](arr []T) {
 	if len(arr) == 0 {
 		fmt.Println("Array is empty.")
 		return
@@ -23,17 +25,16 @@ func PrintArray(arr []int32) {
 			fmt.Print(arr[i], " ")
 		}
 		fmt.Println("...")
-		fmt.Println("Is sorted:", ValidateSort(arr))
-		return
+	} else {
+		for i := 0; i < len(arr); i++ {
+			fmt.Print(arr[i], " ")
+		}
+		fmt.Println()
 	}
-	for i := 0; i < len(arr); i++ {
-		fmt.Print(arr[i], " ")
-	}
-	fmt.Println("\nIs sorted:", ValidateSort(arr))
 }
 
 // ValidateSort checks if the array is sorted in ascending order.
-func ValidateSort(arr []int32) bool {
+func ValidateSort[T constraints.Ordered](arr []T) bool {
 	if len(arr) <= 1 {
 		return true
 	}
@@ -46,10 +47,11 @@ func ValidateSort(arr []int32) bool {
 }
 
 // SortArray sorts an array using the provided sorting algorithm and measures the time taken.
-func SortArray(size int, sorter algorithms.Sorter, generationMethod func(int) []int32, beQuiet bool) (time.Duration, error) {
+func SortArray[T constraints.Ordered](size int, sorter algorithms.Sorter[T], generationMethod func(int) []T, beQuiet bool) (time.Duration, error) {
 	arr := generationMethod(size)
 	if !beQuiet {
 		PrintArray(arr)
+		fmt.Println("Is sorted:", ValidateSort(arr))
 	}
 	// Measure execution time
 	start := time.Now()
@@ -58,6 +60,7 @@ func SortArray(size int, sorter algorithms.Sorter, generationMethod func(int) []
 
 	if !beQuiet {
 		PrintArray(arr)
+		fmt.Println("Is sorted:", ValidateSort(arr))
 	}
 
 	if !ValidateSort(arr) {
@@ -68,7 +71,7 @@ func SortArray(size int, sorter algorithms.Sorter, generationMethod func(int) []
 }
 
 // SortArrayIterate sorts an array multiple times using the provided sorting algorithm and measures the average time taken.
-func SortArrayIterate(size int, sorter algorithms.Sorter, generationMethod func(int) []int32, iterations int, beQuiet bool) (time.Duration, error) {
+func SortArrayIterate[T constraints.Ordered](size int, sorter algorithms.Sorter[T], generationMethod func(int) []T, iterations int, beQuiet bool) (time.Duration, error) {
 	times := make([]time.Duration, iterations)
 
 	// Measure average time over multiple runs

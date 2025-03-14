@@ -1,27 +1,29 @@
 package algorithms
 
-// QuickSorter implements the Sorter interface using quick sort algorithm
-type QuickSorter struct{}
+import "golang.org/x/exp/constraints"
 
-// Sort sorts a slice of integers using the quick sort algorithm
-func (qs QuickSorter) Sort(arr []int32) {
+// QuickSorter implements the Sorter interface using quick sort algorithm
+type QuickSorter[T constraints.Ordered] struct{}
+
+// Sort sorts a slice using the quick sort algorithm
+func (qs QuickSorter[T]) Sort(arr []T) {
 	quickSort(arr, 0, len(arr)-1)
 }
 
 // quickSort is a recursive function that implements the quick sort algorithm
-func quickSort(arr []int32, low int, high int) {
+func quickSort[T constraints.Ordered](arr []T, low int, high int) {
 	if low < high {
 		// Partition the array
-		pi := partition(arr, low, high)
+		pi := partition[T](arr, low, high)
 
 		// Recursively sort elements before and after partition
-		quickSort(arr, low, pi-1)
-		quickSort(arr, pi+1, high)
+		quickSort[T](arr, low, pi-1)
+		quickSort[T](arr, pi+1, high)
 	}
 }
 
 // partition rearranges the elements in the array and returns the index of the pivot
-func partition(arr []int32, low int, high int) int {
+func partition[T constraints.Ordered](arr []T, low int, high int) int {
 	pivot := arr[high] // pivot
 	i := low - 1       // Index of smaller element
 
@@ -37,6 +39,6 @@ func partition(arr []int32, low int, high int) int {
 }
 
 // Name returns the name of this sorting algorithm
-func (qs QuickSorter) Name() string {
+func (qs QuickSorter[T]) Name() string {
 	return "Quick Sort"
 }

@@ -1,13 +1,9 @@
 package algorithms
 
-// Sorter defines the behavior of a sorting algorithm
-type Sorter interface {
-	Sort(arr []int32)
-	Name() string
-}
+import "golang.org/x/exp/constraints"
 
-// FloatSorter defines the behavior of a sorting algorithm for float32 arrays
-type FloatSorter interface {
-	SortFloat(arr []float32)
+// Sorter defines the behavior of a generic sorting algorithm
+type Sorter[T constraints.Ordered] interface {
+	Sort(arr []T)
 	Name() string
 }

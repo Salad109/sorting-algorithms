@@ -1,10 +1,12 @@
 package algorithms
 
-// BubbleSorter implements the Sorter interface using bubble sort algorithm
-type BubbleSorter struct{}
+import "golang.org/x/exp/constraints"
 
-// Sort sorts a slice of integers using the bubble sort algorithm
-func (bs BubbleSorter) Sort(arr []int32) {
+// BubbleSorter implements the Sorter interface using bubble sort algorithm
+type BubbleSorter[T constraints.Ordered] struct{}
+
+// Sort sorts a slice using the bubble sort algorithm
+func (bs BubbleSorter[T]) Sort(arr []T) {
 	n := len(arr)
 
 	for {
@@ -23,6 +25,6 @@ func (bs BubbleSorter) Sort(arr []int32) {
 }
 
 // Name returns the name of this sorting algorithm
-func (bs BubbleSorter) Name() string {
+func (bs BubbleSorter[T]) Name() string {
 	return "Bubble Sort"
 }
